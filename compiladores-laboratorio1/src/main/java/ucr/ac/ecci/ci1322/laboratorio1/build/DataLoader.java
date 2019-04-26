@@ -10,37 +10,42 @@ import ucr.ac.ecci.ci1322.laboratorio1.core.student.service.StudentServiceImpl;
 import ucr.ac.ecci.ci1322.laboratorio1.model.Book;
 import ucr.ac.ecci.ci1322.laboratorio1.model.Student;
 
-import java.lang.Integer; //para parsear hilera
-
+//Carga datos de hoja de cálculo a base de datos.
 public class DataLoader{
 
     static BookService bookService;
     static StudentService studentService;
     static HSSFDataFormatter dataFormatter = new HSSFDataFormatter(); // para obtener valor de celda como hilera
 
+    //Inicializa servicios.
     public DataLoader(){
         bookService = new BookServiceImpl();
         studentService = new StudentServiceImpl();
     }
 
+
+    //Carga cada fila de estudiantes para crear los objetos.
     public void loadStudents(HSSFSheet sheet){
         sheet.forEach( row -> {
-            int id  = Integer.parseInt(dataFormatter.formatCellValue(row.getCell(0)));
+            String id  = dataFormatter.formatCellValue(row.getCell(0));
             String name = dataFormatter.formatCellValue(row.getCell(1));
             String carnet = dataFormatter.formatCellValue(row.getCell(2));
             studentService.create(new Student(id, name, carnet));
         });
     }
 
+
+    //Carga cada fila de libros para crear los objetos.
     public void loadBooks(HSSFSheet sheet){
         sheet.forEach( row -> {
-            int id  = Integer.parseInt(dataFormatter.formatCellValue(row.getCell(0)));
+            String id  = dataFormatter.formatCellValue(row.getCell(0));
             String title = dataFormatter.formatCellValue(row.getCell(1));
             String author = dataFormatter.formatCellValue(row.getCell(2));
             bookService.create(new Book(id, title, author));
         });
     }
 
+    //Carga las hojas de cálculo formato xls.
     public static void main(String[] args){
         DataLoader dl = new DataLoader();
         FileInputStream fileIn = null;
